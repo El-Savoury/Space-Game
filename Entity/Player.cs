@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-
-namespace Space_Game
+﻿namespace Space_Game
 {
     /// <summary>
     /// Playable entity 
@@ -10,6 +8,8 @@ namespace Space_Game
         #region rConstants
 
         const float SPEED = 3.0f;
+        const int WIDTH = 16;
+        const int HEIGHT = 16;
 
         #endregion rConstants
 
@@ -41,7 +41,7 @@ namespace Space_Game
 
 
         /// <summary>
-        /// Load textures and assets.
+        /// Load player textures and assets.
         /// </summary>
         /// <param name="content">Monogame content manager</param>
         public override void LoadContent(ContentManager content)
@@ -64,33 +64,46 @@ namespace Space_Game
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            Move();
+            mPosition += CalcMovement();
         }
 
 
-
-        public void Move()
+        /// <summary>
+        /// Calculate player movement based on directional input 
+        /// </summary>
+        /// <returns>Vector representing distance and direction to move</returns>
+        private Vector2 CalcMovement()
         {
+            Vector2 inputDir = Vector2.Zero;
+
             if (InputManager.KeyHeld(Controls.Left))
             {
-                mPosition.X -= SPEED;
+                inputDir.X -= 1;
             }
 
             if (InputManager.KeyHeld(Controls.Right))
             {
-                mPosition.X += SPEED;
+                inputDir.X += 1;
             }
             if (InputManager.KeyHeld(Controls.Up))
             {
-                mPosition.Y -= SPEED;
+                inputDir.Y -= 1;
             }
 
             if (InputManager.KeyHeld(Controls.Down))
             {
-                mPosition.Y += SPEED;
+                inputDir.Y += 1;
             }
+
+            if (inputDir != Vector2.Zero)
+            {
+                inputDir.Normalize();
+            }
+            return inputDir * SPEED;
         }
+
         #endregion rUpdate
+
 
 
 
@@ -102,15 +115,14 @@ namespace Space_Game
         /// <summary>
         /// Draw player
         /// </summary>
-        /// <param name="info"></param>
+        /// <param name="info">Info needed to draw</param>
         public override void Draw(DrawInfo info)
         {
-        }
-
-
-        public void DrawSquare(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(Main.GetDummyTexture(), new Rectangle((int)mPosition.X, (int)mPosition.Y, 32, 32), Color.Red);
+            info.spriteBatch.Draw(Main.GetDummyTexture(),
+                                  new Rectangle((int)mPosition.X,
+                                                (int)mPosition.Y,
+                                                WIDTH, HEIGHT),
+                                  Color.Red);
         }
 
         #endregion rDraw
@@ -119,9 +131,9 @@ namespace Space_Game
 
 
 
+
         #region mUtility
 
-     
         #endregion mUtility
 
 

@@ -1,17 +1,15 @@
-﻿using System.Threading.Tasks.Dataflow;
-
-namespace Space_Game
+﻿namespace Space_Game
 {
     /// <summary>
-    /// Controls the viewport
+    /// Controls the viewport.
     /// </summary>
     internal class Camera
     {
         #region rConstants
 
-        private const float MIN_ZOOM = 0.25f;
+        private const float MIN_ZOOM = 1.00f;
         private const float MAX_ZOOM = 1080.0f;
-        private const float ZOOM_AMOUNT = 0.05f;
+        private const float ZOOM_AMOUNT = 0.25f;
         private const float FOLLOW_OFFSET = 0.02F;
 
         #endregion rConstants
@@ -23,10 +21,10 @@ namespace Space_Game
 
         #region rMembers
 
-        public Vector2 mCurrentPosition;
-        public Vector2 mTargetPosition;
-        public float mZoom;
-        public float mRotation;
+        private Vector2 mPosition;
+        private float mZoom;
+        private float mRotation;
+        private Entity mTargetEntity;
 
         // Height and width of viewport which needs to adjust when player resizes game window.
         public int mViewportWidth { get; set; }
@@ -47,8 +45,8 @@ namespace Space_Game
         private void CreateTranslationMatrix()
         {
             mTranslationMatrix = Matrix.CreateTranslation(
-                                -(int)mCurrentPosition.X,
-                                -(int)mCurrentPosition.Y,
+                                -(int)mPosition.X,
+                                -(int)mPosition.Y,
                                 0) *
                                 Matrix.CreateRotationZ(mRotation) *
                                 Matrix.CreateScale(new Vector3(mZoom, mZoom, 1)) *
@@ -64,28 +62,33 @@ namespace Space_Game
 
         #region rInitialisation
 
-        public Camera(Vector2 targetPos)
+        public Camera()
         {
-            mTargetPosition = targetPos;
-            mCurrentPosition = mTargetPosition;
             mZoom = MIN_ZOOM;
         }
 
         #endregion rInitialisation
 
 
+
+
+
+
         #region rUpdate
 
         /// <summary>
-        /// Update camera
+        /// Update camera.
         /// </summary>
-        /// <param name="player">Entity controlled by player for camera to follow</param>
-        public void Update(Player player)
+        public void Update()
         {
             mViewportWidth = Main.GetGraphicsDevice().Viewport.Width;
             mViewportHeight = Main.GetGraphicsDevice().Viewport.Height;
 
-            Follow(player.GetPosition());
+            if (mTargetEntity != null)
+            {
+                FollowTarget();
+            }
+
             CreateTranslationMatrix();
 
             if (IsZoomIn()) { AdjustZoom(ZOOM_AMOUNT); }
@@ -99,20 +102,38 @@ namespace Space_Game
 
 
 
+
         #region rUtility
 
         /// <summary>
-        /// Get camera to follow players position at an offset
+        /// Centre the camera on specific position.
+        /// </summary>
+        /// <param name="pos">Position to center camera on</param>
+        public void CentreOn(Vector2 pos)
+        {
+            mPosition = pos;
+        }
+
+        /// <summary>
+        /// Set entity for camera to follow.
+        /// </summary>
+        public void TargetEntity(Entity entity)
+        {
+            mTargetEntity = entity;
+        }
+
+        /// <summary>
+        /// Get camera to follow players position at an offset.
         /// </summary>
         /// <param name="targetPos">Target position for camera to follow</param>
-        public void Follow(Vector2 targetPos)
+        private void FollowTarget()
         {
-            mCurrentPosition += (targetPos - mCurrentPosition) * FOLLOW_OFFSET;
+            mPosition += (mTargetEntity.GetPosition() - mPosition) * FOLLOW_OFFSET;
         }
 
 
         /// <summary>
-        /// Zoom in or out
+        /// Zoom in or out.
         /// </summary>
         /// <param name="zoomAmount">Amount to zoom in or out</param>
         private void AdjustZoom(float zoomAmount)

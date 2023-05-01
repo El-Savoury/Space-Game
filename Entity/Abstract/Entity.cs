@@ -1,7 +1,7 @@
 ﻿namespace Space_Game
 {
     /// <summary>
-    /// Represents a moving entity in the game world.
+    /// Represents an interactive entity in the game world
     /// </summary>
     abstract class Entity
     {
@@ -21,7 +21,7 @@
         #region mInitialisation
 
         /// <summary>
-        /// Entity constructor.
+        /// Entity constructor
         /// </summary>
         /// <param name="pos">Starting position</param>
         public Entity(Vector2 pos)
@@ -33,7 +33,7 @@
 
 
         /// <summary>
-        /// Load content for entity such as textures.
+        /// Load content for entity such as textures
         /// </summary>
         /// <param name="content">Monogame content manager</param>
         public abstract void LoadContent(ContentManager content);
@@ -47,7 +47,7 @@
         #region rUpdate
 
         /// <summary>
-        /// Update entity.
+        /// Update entity
         /// </summary>
         /// <param name="gameTime">Frame time</param>
         public virtual void Update(GameTime gameTime)
@@ -57,7 +57,7 @@
 
 
         /// <summary>
-        /// React to a collision witht this entity.
+        /// React to a collision with this entity
         /// </summary>
         /// <param name="entity"></param>
         public virtual void CollideWithEntity(Entity entity)
@@ -74,7 +74,7 @@
         #region rDraw
 
         /// <summary>
-        /// Draw entity.
+        /// Draw entity
         /// </summary>
         public abstract void Draw(DrawInfo info);
 
@@ -87,7 +87,16 @@
         #region rUtility
 
         /// <summary>
-        /// Get position of entity.
+        /// Get the collider bounds for this entity
+        /// </summary>
+        public Rect2f ColliderBounds()
+        {
+            return new Rect2f(mPosition, mPosition + new Vector2(mTexture.Width, mTexture.Height));
+        }
+
+
+        /// <summary>
+        /// Get position of entity
         /// </summary>
         public Vector2 GetPosition()
         {
@@ -96,7 +105,7 @@
 
 
         /// <summary>
-        /// Set position of entity.
+        /// Set position of entity
         /// </summary>
         public void SetPosition(Vector2 pos)
         {
@@ -105,7 +114,19 @@
 
 
         /// <summary>
-        /// Enable/Disable this entity. Disabled entities will not be drawn or updated.
+        /// Get centre position of entity
+        /// </summary>
+        /// <returns></returns>
+        public Vector2 GetCentrePos()
+        {
+            Rect2f collider = ColliderBounds();
+
+            return (collider.min + collider.max) / 2.0f;
+
+        }
+
+        /// <summary>
+        /// Enable/Disable this entity. Disabled entities will not be drawn or updated
         /// </summary>
         public virtual void SetEnabled(bool enabled)
         {

@@ -1,4 +1,6 @@
 ﻿using Space_Game.Screens;
+using System.Dynamic;
+using System.Threading;
 
 namespace Space_Game
 {
@@ -180,7 +182,7 @@ namespace Space_Game
         #region rUtility
 
         /// <summary>
-        /// Get the graphics device
+        /// Get the graphics device.
         /// </summary>
         public static GraphicsDevice GetGraphicsDevice()
         {
@@ -189,7 +191,7 @@ namespace Space_Game
 
 
         /// <summary>
-        /// Get the content manager
+        /// Get the content manager.
         /// </summary>
         public static ContentManager GetContentManager()
         {
@@ -198,7 +200,7 @@ namespace Space_Game
 
 
         /// <summary>
-        /// Get a dummy white texture
+        /// Get a dummy white texture.
         /// </summary>
         public static Texture2D GetDummyTexture()
         {

@@ -9,6 +9,8 @@
 
         Player mPlayer;
         Camera mCamera;
+        Random mRand = new Random();
+        List<Particle> mParticles = new List<Particle>();
 
         #endregion rMembers
 
@@ -25,6 +27,7 @@
         /// <param name="graphics">Graphics device</param>
         public GameScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
+            SpawnParticles();
         }
 
         /// <summary>
@@ -32,10 +35,12 @@
         /// </summary>
         public override void LoadContent()
         {
-            mPlayer = new Player(new Vector2(100, 100));
-            mCamera = new Camera(mPlayer.GetPosition());
+            mPlayer = new Player(new Vector2(0, 0));
+            mCamera = new Camera();
             mCamera.mViewportWidth = mGraphics.GraphicsDevice.Viewport.Height;
             mCamera.mViewportHeight = mGraphics.GraphicsDevice.Viewport.Height;
+            mCamera.TargetEntity(mPlayer);
+            mCamera.CentreOn(mPlayer.GetPosition());
         }
 
         #endregion rInitialisation
@@ -57,9 +62,9 @@
             {
                 ScreenManager.ActivateScreen(ScreenType.Title);
             }
-
+            
             mPlayer.Update(gameTime);
-            mCamera.Update(mPlayer);
+            mCamera.Update();
         }
 
         #endregion rUpdate
@@ -92,7 +97,13 @@
                                 new Rectangle(0, 0, 400, 300),
                                 Color.DarkBlue);
 
-            mPlayer.DrawSquare(info.spriteBatch);
+            foreach (Particle particle in mParticles)
+            {
+                particle.Draw(info);
+            }
+
+
+            mPlayer.Draw(info);
 
             info.spriteBatch.End();
 
@@ -107,7 +118,23 @@
 
 
 
-        #region rUtitlity
+        #region rUtility
+
+        private void SpawnParticles()
+        {
+            for (int x = 0; x < mGraphics.GraphicsDevice.Viewport.Width; x++)
+            {
+                for (int y = 0; y < mGraphics.GraphicsDevice.Viewport.Height; y++)
+                {
+                    bool isParticle = mRand.Next(0, 256) < 2;
+
+                    if (isParticle)
+                    {
+                        mParticles.Add(new Particle(new Vector2(x, y)));
+                    }
+                }
+            }
+        }
 
         #endregion rUtility
     }
