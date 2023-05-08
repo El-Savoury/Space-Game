@@ -9,8 +9,7 @@
 
         Player mPlayer;
         Camera mCamera;
-        Random mRand = new Random();
-        List<Particle> mParticles = new List<Particle>();
+        ParticleSpawner mParticleSpawner;
 
         #endregion rMembers
 
@@ -27,7 +26,6 @@
         /// <param name="graphics">Graphics device</param>
         public GameScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
-            SpawnParticles();
         }
 
         /// <summary>
@@ -36,9 +34,12 @@
         public override void LoadContent()
         {
             mPlayer = new Player(new Vector2(0, 0));
+            mParticleSpawner = new ParticleSpawner();
+
+            // Init camera to current viewport size and centre on player.
             mCamera = new Camera();
-            mCamera.mViewportWidth = mGraphics.GraphicsDevice.Viewport.Height;
-            mCamera.mViewportHeight = mGraphics.GraphicsDevice.Viewport.Height;
+            mCamera.mCameraWidth = mGraphics.GraphicsDevice.Viewport.Height;
+            mCamera.mCameraHeight = mGraphics.GraphicsDevice.Viewport.Height;
             mCamera.TargetEntity(mPlayer);
             mCamera.CentreOn(mPlayer.GetPosition());
         }
@@ -62,7 +63,8 @@
             {
                 ScreenManager.ActivateScreen(ScreenType.Title);
             }
-            
+
+            mParticleSpawner.Update(mCamera.GetCentre());
             mPlayer.Update(gameTime);
             mCamera.Update();
         }
@@ -91,18 +93,12 @@
                                    null, null, null, null,
                                    mCamera.mTranslationMatrix);
 
-
             // Draw a background shape as reference point for movement
             info.spriteBatch.Draw(Main.GetDummyTexture(),
                                 new Rectangle(0, 0, 400, 300),
                                 Color.DarkBlue);
 
-            foreach (Particle particle in mParticles)
-            {
-                particle.Draw(info);
-            }
-
-
+            mParticleSpawner.Draw(info);
             mPlayer.Draw(info);
 
             info.spriteBatch.End();
@@ -119,22 +115,6 @@
 
 
         #region rUtility
-
-        private void SpawnParticles()
-        {
-            for (int x = 0; x < mGraphics.GraphicsDevice.Viewport.Width; x++)
-            {
-                for (int y = 0; y < mGraphics.GraphicsDevice.Viewport.Height; y++)
-                {
-                    bool isParticle = mRand.Next(0, 256) < 2;
-
-                    if (isParticle)
-                    {
-                        mParticles.Add(new Particle(new Vector2(x, y)));
-                    }
-                }
-            }
-        }
 
         #endregion rUtility
     }

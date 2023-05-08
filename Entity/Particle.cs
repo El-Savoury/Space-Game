@@ -1,7 +1,7 @@
 ﻿namespace Space_Game
 {
     /// <summary>
-    /// Represents a particle than can interact with player 
+    /// Represents a particle than can interact with player.
     /// </summary>
     class Particle : Entity
     {
@@ -17,6 +17,10 @@
 
 
         #region rMembers
+
+        private Vector2 mVelocity;
+        private Color mColour;
+
 
         #endregion rMembers
 
@@ -70,6 +74,10 @@
 
         #region rDraw
 
+        /// <summary>
+        /// Draw particle.
+        /// </summary>
+        /// <param name="info">Info needed to draw</param>
         public override void Draw(DrawInfo info)
         {
             info.spriteBatch.Draw(Main.GetDummyTexture(),

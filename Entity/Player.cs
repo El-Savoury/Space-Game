@@ -1,7 +1,7 @@
 ﻿namespace Space_Game
 {
     /// <summary>
-    /// Playable entity 
+    /// Playable entity. 
     /// </summary>
     class Player : Entity
     {

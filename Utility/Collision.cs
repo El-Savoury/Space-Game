@@ -26,5 +26,6 @@
     /// </summary>
     static class Collision
     {
+
     }
 }
