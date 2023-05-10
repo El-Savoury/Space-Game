@@ -38,8 +38,8 @@
 
             // Init camera to current viewport size and centre on player.
             mCamera = new Camera();
-            mCamera.mCameraWidth = mGraphics.GraphicsDevice.Viewport.Height;
-            mCamera.mCameraHeight = mGraphics.GraphicsDevice.Viewport.Height;
+            mCamera.mWidth = mGraphics.GraphicsDevice.Viewport.Height;
+            mCamera.mHeight = mGraphics.GraphicsDevice.Viewport.Height;
             mCamera.TargetEntity(mPlayer);
             mCamera.CentreOn(mPlayer.GetPosition());
         }
@@ -64,9 +64,9 @@
                 ScreenManager.ActivateScreen(ScreenType.Title);
             }
 
-            mParticleSpawner.Update(mCamera.GetCentre());
             mPlayer.Update(gameTime);
             mCamera.Update();
+            mParticleSpawner.Update(mPlayer.GetPosition());
         }
 
         #endregion rUpdate

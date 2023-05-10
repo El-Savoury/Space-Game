@@ -27,8 +27,8 @@
         private Entity mTargetEntity;
 
         // Height and width of viewport which needs to adjust when player resizes game window.
-        public int mCameraWidth { get; set; }
-        public int mCameraHeight { get; set; }
+        public int mWidth { get; set; }
+        public int mHeight { get; set; }
 
         // Create a matrix to offset everything being drawn.
         public Matrix mTranslationMatrix { get; private set; }
@@ -41,7 +41,7 @@
                                 0) *
                                 Matrix.CreateRotationZ(mRotation) *
                                 Matrix.CreateScale(new Vector3(mZoom, mZoom, 1)) *
-                                Matrix.CreateTranslation(new Vector3(GetCentre(), 0));
+                                Matrix.CreateTranslation(new Vector3(mWidth / 2, mHeight / 2, 0));
         }
 
         #endregion rMembers
@@ -72,8 +72,8 @@
         /// </summary>
         public void Update()
         {
-            mCameraWidth = Main.GetGraphicsDevice().Viewport.Width;
-            mCameraHeight = Main.GetGraphicsDevice().Viewport.Height;
+            mWidth = Main.GetGraphicsDevice().Viewport.Width;
+            mHeight = Main.GetGraphicsDevice().Viewport.Height;
 
             if (mTargetEntity != null)
             {
@@ -99,9 +99,10 @@
         /// <summary>
         /// Get centre position of camera.
         /// </summary>
-        public Vector2 GetCentre()
+        public Vector2 GetCentrePos()
         {
-            return new Vector2(mCameraWidth * 0.5f, mCameraHeight * 0.5f);
+            return new Vector2(mPosition.X +  mWidth / 2,
+                               mPosition.Y + mHeight / 2);
         }
 
 

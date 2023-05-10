@@ -1,11 +1,14 @@
-﻿namespace Space_Game
+﻿using System.Reflection.Metadata.Ecma335;
+
+namespace Space_Game
 {
     internal class ParticleSpawner
     {
         #region rConstants
 
-        const int LOADED_GRID_SIZE = 300;
-        const int CHUNK_SIZE = 100;
+        const int LOADED_GRID_SIZE = 3; // Grid width and height in chunks
+        const int CHUNK_SIZE = 100; // Chunk size in pixels
+        const int PARTICLES_PER_CHUNK = 25;
 
         #endregion rConstants
 
@@ -15,7 +18,7 @@
 
         #region rMembers
 
-        Rectangle mLoadedChunks = new Rectangle(0, 0, LOADED_GRID_SIZE, LOADED_GRID_SIZE);
+        Rectangle mLoadedChunks;
         Random mRand = new Random();
         List<Particle> mParticles = new List<Particle>();
 
@@ -57,10 +60,10 @@
                 for (int y = newChunks.Y; y < newChunks.Y + newChunks.Height; y++)
                 {
                     // If chunk isnt part of loaded chunks spawn particles in new chunk.
-                    Point chunkLocation = new Point(x, y);
-                    if (!Utility.IsPointinRect(chunkLocation, mLoadedChunks))
+                    Point chunkPos = new Point(x, y);
+                    if (!Utility.IsPointinRect(chunkPos, mLoadedChunks))
                     {
-                        LoadChunk(chunkLocation);
+                        LoadChunk(chunkPos);
                     }
                 }
             }
@@ -71,10 +74,10 @@
                 for (int y = mLoadedChunks.Y; y < mLoadedChunks.Y + mLoadedChunks.Height; y++)
                 {
                     // If loaded chunk is not within new grid unload it.
-                    Point chunkLocation = new Point(x, y);  
-                    if(!Utility.IsPointinRect(chunkLocation, newChunks))
+                    Point chunkPos = new Point(x, y);
+                    if (!Utility.IsPointinRect(chunkPos, newChunks))
                     {
-                        UnloadChunk();
+                        UnloadChunk(chunkPos);
                     }
                 }
             }
@@ -117,12 +120,12 @@
         /// <summary>
         /// Gets the area containing adjacent chunks to the one the player is currently in.
         /// </summary>
-        /// <param name="camera">Camera following player</param>
+        /// <param name="cameraCentre">Camera following player</param>
         /// <returns>Rectangle with player chunk in middle and its adjacent chunks</returns>
-        private Rectangle GetChunks(Vector2 cameraPos)
+        private Rectangle GetChunks(Vector2 cameraCentre)
         {
             // Convert camera position from world space to coordinate within chunk.
-            Vector2 chunkCoord = cameraPos / CHUNK_SIZE;
+            Vector2 chunkCoord = cameraCentre / CHUNK_SIZE;
 
             // Calculate rectangle origin. This is the top left corner of inhabited chunk.
             Point rectOrigin = new Point((int)chunkCoord.X, (int)chunkCoord.Y); // Round down to nearest int.
@@ -138,19 +141,19 @@
         /// <summary>
         /// Load all assets within chunk.
         /// </summary>
-        private void LoadChunk(Point chunkLocation)
+        private void LoadChunk(Point chunkPos)
         {
-            //SpawnParticles(new Rectangle(chunkLocation.X, chunkLocation.Y, CHUNK_SIZE, CHUNK_SIZE));
+            SpawnParticles(chunkPos);
         }
 
 
         /// <summary>
         /// Unload all assets within chunk.
         /// </summary>
-        private void UnloadChunk()
+        private void UnloadChunk(Point chunkPos)
         {
-
         }
+
 
 
         /// <summary>
@@ -186,19 +189,15 @@
         /// <summary>
         /// Create chance for particle to spawn for each pixel within defined area.
         /// </summary>
-        private void SpawnParticles(Rectangle spawnArea)
+        private void SpawnParticles(Point chunkPos)
         {
-            for (int x = 0; x < spawnArea.Width; x++)
-            {
-                for (int y = 0; y < spawnArea.Height; y++)
-                {
-                    bool isParticle = mRand.Next(0, 256) < 2;
+            Vector2 chunkOrigin = new Vector2(chunkPos.X * CHUNK_SIZE, chunkPos.Y * CHUNK_SIZE);
 
-                    if (isParticle)
-                    {
-                        mParticles.Add(new Particle(new Vector2(x, y)));
-                    }
-                }
+            for (int i = 0; i < PARTICLES_PER_CHUNK; i++)
+            {
+                Vector2 particlePos = new Vector2(mRand.Next(0, CHUNK_SIZE), mRand.Next(0, CHUNK_SIZE));
+                particlePos += chunkOrigin;
+                mParticles.Add(new Particle(particlePos));
             }
         }
 
