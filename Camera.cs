@@ -99,10 +99,9 @@
         /// <summary>
         /// Get centre position of camera.
         /// </summary>
-        public Vector2 GetCentrePos()
+        public Vector2 GetPosition()
         {
-            return new Vector2(mPosition.X +  mWidth / 2,
-                               mPosition.Y + mHeight / 2);
+            return new Vector2(mPosition.X, mPosition.Y);
         }
 
 

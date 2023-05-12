@@ -11,8 +11,8 @@
         /// <returns>True if point is within rectangle</returns>
         public static bool IsPointinRect(Point point, Rectangle rect)
         {
-            return point.X > rect.X && point.X < rect.X + rect.Width &&
-                   point.Y > rect.Y && point.Y < rect.Y + rect.Height;
+            return point.X >= rect.X && point.X < rect.X + rect.Width &&
+                   point.Y >= rect.Y && point.Y < rect.Y + rect.Height;
         }
 
 

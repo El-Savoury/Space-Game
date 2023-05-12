@@ -49,21 +49,21 @@ namespace Space_Game
         /// <summary>
         /// Update chunk grid system and spawn/despawn particles.
         /// </summary>
-        /// <param name="cameraPos">Position of camera in game world</param>
-        public void Update(Vector2 cameraPos)
+        /// <param name="playerPos">Position of player in world space</param>
+        public void Update(Vector2 playerPos)
         {
-            Rectangle newChunks = GetChunks(cameraPos);
+            Rectangle newChunks = GetChunks(playerPos);
 
-            // Check each coordinate of adjacent grid to see if falls outside of the currently loaded chunks. 
+            // Check each chunk to see if it falls outside of the currently loaded chunks. 
             for (int x = newChunks.X; x < newChunks.X + newChunks.Width; x++)
             {
                 for (int y = newChunks.Y; y < newChunks.Y + newChunks.Height; y++)
                 {
                     // If chunk isnt part of loaded chunks spawn particles in new chunk.
-                    Point chunkPos = new Point(x, y);
-                    if (!Utility.IsPointinRect(chunkPos, mLoadedChunks))
+                    Point chunkOrigin = new Point(x, y);
+                    if (!Utility.IsPointinRect(chunkOrigin, mLoadedChunks))
                     {
-                        LoadChunk(chunkPos);
+                        LoadChunk(chunkOrigin);
                     }
                 }
             }
@@ -102,7 +102,10 @@ namespace Space_Game
         {
             foreach (Particle particle in mParticles)
             {
-                particle.Draw(info);
+                if (particle != null)
+                {
+                    particle.Draw(info);
+                }
             }
         }
 
@@ -120,12 +123,12 @@ namespace Space_Game
         /// <summary>
         /// Gets the area containing adjacent chunks to the one the player is currently in.
         /// </summary>
-        /// <param name="cameraCentre">Camera following player</param>
+        /// <param name="playerPos">Position of player in world space</param>
         /// <returns>Rectangle with player chunk in middle and its adjacent chunks</returns>
-        private Rectangle GetChunks(Vector2 cameraCentre)
+        private Rectangle GetChunks(Vector2 playerPos)
         {
             // Convert camera position from world space to coordinate within chunk.
-            Vector2 chunkCoord = cameraCentre / CHUNK_SIZE;
+            Vector2 chunkCoord = playerPos / CHUNK_SIZE;
 
             // Calculate rectangle origin. This is the top left corner of inhabited chunk.
             Point rectOrigin = new Point((int)chunkCoord.X, (int)chunkCoord.Y); // Round down to nearest int.
@@ -152,46 +155,42 @@ namespace Space_Game
         /// </summary>
         private void UnloadChunk(Point chunkPos)
         {
-        }
-
-
-
-        /// <summary>
-        /// Spawn new particles in rectangle.
-        /// </summary>
-        /// <param name="rect"> Empty rectangle created when spawnRect exceeds prevSpawnRect</param>
-        private void SpawnInRect(Rectangle rect)
-        {
-            //SpawnParticles(rect);
+            DespawnParticles(chunkPos);
         }
 
 
         /// <summary>
-        /// Despawn all particles in rectangle.
+        /// Despawn all particles in chunk.
         /// </summary>
-        /// <param name="rect">Rectangle containing existing particles created when prevSpawnRect exceeds spawnRect</param>        
-        private void DespawnInRect(Rectangle rect)
+        /// <param name="chunkPos">Top left corner of chunk</param>
+        private void DespawnParticles(Point chunkPos)
         {
+            Rectangle chunk = new Rectangle(chunkPos.X * CHUNK_SIZE, chunkPos.Y * CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
+
             for (int i = 0; i < mParticles.Count; i++)
             {
-                if (mParticles[i].GetPosition().X >= rect.X &&
-                    mParticles[i].GetPosition().X <= rect.X + rect.Width &&
-                    mParticles[i].GetPosition().Y >= rect.Y &&
-                    mParticles[i].GetPosition().Y <= rect.Y + rect.Height)
+                if (mParticles[i] != null)
                 {
-                    mParticles[i] = null;
-                    mParticles.Remove(mParticles[i]);
+                    if (mParticles[i].GetPosition().X >= chunk.X &&
+                        mParticles[i].GetPosition().X <= chunk.X + chunk.Width &&
+                        mParticles[i].GetPosition().Y >= chunk.Y &&
+                        mParticles[i].GetPosition().Y <= chunk.Y + chunk.Height)
+                    {
+                        mParticles[i] = null;
+                    }
                 }
             }
+
+            mParticles.RemoveAll(particle => particle == null);
         }
 
 
         /// <summary>
-        /// Create chance for particle to spawn for each pixel within defined area.
+        /// Spawn particles with random x and y coordinates.
         /// </summary>
         private void SpawnParticles(Point chunkPos)
         {
-            Vector2 chunkOrigin = new Vector2(chunkPos.X * CHUNK_SIZE, chunkPos.Y * CHUNK_SIZE);
+            Vector2 chunkOrigin = new Vector2(chunkPos.X * CHUNK_SIZE, chunkPos.Y * CHUNK_SIZE); 
 
             for (int i = 0; i < PARTICLES_PER_CHUNK; i++)
             {
