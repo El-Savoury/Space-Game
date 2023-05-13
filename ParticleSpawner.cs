@@ -128,10 +128,11 @@ namespace Space_Game
         private Rectangle GetChunks(Vector2 playerPos)
         {
             // Convert camera position from world space to coordinate within chunk.
-            Vector2 chunkCoord = playerPos / CHUNK_SIZE;
+            double chunkX = playerPos.X / CHUNK_SIZE;
+            double chunkY = playerPos.Y / CHUNK_SIZE;
 
             // Calculate rectangle origin. This is the top left corner of inhabited chunk.
-            Point rectOrigin = new Point((int)chunkCoord.X, (int)chunkCoord.Y); // Round down to nearest int.
+            Point rectOrigin = new Point((int)Math.Floor(chunkX), (int)Math.Floor(chunkY)); // Round down to nearest int.
 
             // Offset the rectangle to position inhabited chunk as the central chunk.
             rectOrigin.X -= LOADED_GRID_SIZE / 2;
