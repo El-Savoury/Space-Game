@@ -1,14 +1,15 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace Space_Game
+﻿namespace Space_Game
 {
+    /// <summary>
+    /// Manages particle spawning chunk system.
+    /// </summary>
     internal class ParticleSpawner
     {
         #region rConstants
 
         const int LOADED_GRID_SIZE = 3; // Grid width and height in chunks
-        const int CHUNK_SIZE = 100; // Chunk size in pixels
-        const int PARTICLES_PER_CHUNK = 25;
+        const int CHUNK_SIZE = 2000; // Chunk size in pixels
+        const int PARTICLES_PER_CHUNK = 100;
 
         #endregion rConstants
 
@@ -18,6 +19,7 @@ namespace Space_Game
 
         #region rMembers
 
+        Entity mTarget;
         Rectangle mLoadedChunks;
         Random mRand = new Random();
         List<Particle> mParticles = new List<Particle>();
@@ -34,7 +36,16 @@ namespace Space_Game
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ParticleSpawner()
+        public ParticleSpawner(Entity target)
+        {
+            mTarget = target;
+        }
+
+
+        /// <summary>
+        /// Load particles types to be spawned.
+        /// </summary>
+        public void LoadContent()
         {
         }
 
@@ -50,39 +61,14 @@ namespace Space_Game
         /// Update chunk grid system and spawn/despawn particles.
         /// </summary>
         /// <param name="playerPos">Position of player in world space</param>
-        public void Update(Vector2 playerPos)
+        public void Update(GameTime gameTime, Vector2 playerPos)
         {
-            Rectangle newChunks = GetChunks(playerPos);
+            GenerateChunks(playerPos);
 
-            // Check each chunk to see if it falls outside of the currently loaded chunks. 
-            for (int x = newChunks.X; x < newChunks.X + newChunks.Width; x++)
+            foreach (Particle particle in mParticles)
             {
-                for (int y = newChunks.Y; y < newChunks.Y + newChunks.Height; y++)
-                {
-                    // If chunk isnt part of loaded chunks spawn particles in new chunk.
-                    Point chunkOrigin = new Point(x, y);
-                    if (!Utility.IsPointinRect(chunkOrigin, mLoadedChunks))
-                    {
-                        LoadChunk(chunkOrigin);
-                    }
-                }
+                particle.Update(gameTime);
             }
-
-            // Check loaded chunks to see if they fall outside of adjacent grid and can be unloaded.
-            for (int x = mLoadedChunks.X; x < mLoadedChunks.X + mLoadedChunks.Width; x++)
-            {
-                for (int y = mLoadedChunks.Y; y < mLoadedChunks.Y + mLoadedChunks.Height; y++)
-                {
-                    // If loaded chunk is not within new grid unload it.
-                    Point chunkPos = new Point(x, y);
-                    if (!Utility.IsPointinRect(chunkPos, newChunks))
-                    {
-                        UnloadChunk(chunkPos);
-                    }
-                }
-            }
-
-            mLoadedChunks = newChunks;
         }
 
         #endregion rUpdate
@@ -118,6 +104,45 @@ namespace Space_Game
 
 
         #region rUtility
+
+        /// <summary>
+        /// Create and destroy chunks around player.
+        /// </summary>
+        /// <param name="playerPos">Position of player in world space</param>s
+        private void GenerateChunks(Vector2 playerPos)
+        {
+            Rectangle newChunks = GetChunks(playerPos);
+
+            // Check each chunk to see if it falls outside of the currently loaded chunks. 
+            for (int x = newChunks.X; x < newChunks.X + newChunks.Width; x++)
+            {
+                for (int y = newChunks.Y; y < newChunks.Y + newChunks.Height; y++)
+                {
+                    // If chunk isnt part of loaded chunks spawn particles in new chunk.
+                    Point chunkOrigin = new Point(x, y);
+                    if (!Utility.IsPointinRect(chunkOrigin, mLoadedChunks))
+                    {
+                        LoadChunk(chunkOrigin);
+                    }
+                }
+            }
+
+            // Check loaded chunks to see if they fall outside of adjacent grid and can be unloaded.
+            for (int x = mLoadedChunks.X; x < mLoadedChunks.X + mLoadedChunks.Width; x++)
+            {
+                for (int y = mLoadedChunks.Y; y < mLoadedChunks.Y + mLoadedChunks.Height; y++)
+                {
+                    // If loaded chunk is not within new grid unload it.
+                    Point chunkPos = new Point(x, y);
+                    if (!Utility.IsPointinRect(chunkPos, newChunks))
+                    {
+                        UnloadChunk(chunkPos);
+                    }
+                }
+            }
+
+            mLoadedChunks = newChunks;
+        }
 
 
         /// <summary>
@@ -191,13 +216,14 @@ namespace Space_Game
         /// </summary>
         private void SpawnParticles(Point chunkPos)
         {
-            Vector2 chunkOrigin = new Vector2(chunkPos.X * CHUNK_SIZE, chunkPos.Y * CHUNK_SIZE); 
+            Vector2 chunkOrigin = new Vector2(chunkPos.X * CHUNK_SIZE, chunkPos.Y * CHUNK_SIZE);
 
             for (int i = 0; i < PARTICLES_PER_CHUNK; i++)
             {
                 Vector2 particlePos = new Vector2(mRand.Next(0, CHUNK_SIZE), mRand.Next(0, CHUNK_SIZE));
                 particlePos += chunkOrigin;
-                mParticles.Add(new Particle(particlePos));
+                mParticles.Add(new GreyParticle(particlePos, mTarget));
+                mParticles.Add(new BlueParticle(particlePos));
             }
         }
 

@@ -7,9 +7,9 @@
     {
         #region rConstants
 
-        private const float MIN_ZOOM = 1.00f;
-        private const float MAX_ZOOM = 1080.0f;
-        private const float ZOOM_AMOUNT = 0.25f;
+        private const float MIN_ZOOM = 0.5f;
+        private const float MAX_ZOOM = 10.0f;
+        private const float ZOOM_AMOUNT = 0.01f;
         private const float FOLLOW_OFFSET = 0.02F;
 
         #endregion rConstants
@@ -55,7 +55,7 @@
 
         public Camera()
         {
-            mZoom = MIN_ZOOM;
+            mZoom = 2.0f;
         }
 
         #endregion rInitialisation

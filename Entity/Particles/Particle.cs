@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a particle than can interact with player.
     /// </summary>
-    class Particle : Entity
+    abstract class Particle : Entity
     {
         #region rConstants
 
@@ -18,8 +18,8 @@
 
         #region rMembers
 
-        private Vector2 mVelocity;
-        private Color mColour;
+        protected Vector2 mVelocity;
+        protected Color mColour;
 
 
         #endregion rMembers
@@ -62,7 +62,7 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-           
+
         }
 
         #endregion rUpdate
@@ -80,11 +80,7 @@
         /// <param name="info">Info needed to draw</param>
         public override void Draw(DrawInfo info)
         {
-            info.spriteBatch.Draw(Main.GetDummyTexture(),
-                                  new Rectangle((int)mPosition.X,
-                                                (int)mPosition.Y,
-                                                WIDTH, HEIGHT),
-                                  Color.White);
+            info.spriteBatch.Draw(Main.GetDummyTexture(), new Rectangle((int)mPosition.X, (int)mPosition.Y, WIDTH, HEIGHT), mColour);
         }
 
         #endregion rDraw

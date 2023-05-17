@@ -6,6 +6,18 @@
     static class Utility
     {
         /// <summary>
+        /// Get distance between two points.
+        /// </summary>
+        /// <returns>Float equalling distance between points</returns>
+        public static float GetDistance(Vector2 a, Vector2 b)
+        {
+            float dx = a.X - b.X;
+            float dy = a.Y - b.Y;
+            return (float)Math.Sqrt(dx * dx + dy * dy);
+        }
+
+
+        /// <summary>
         /// Checks if point is within bounds of rectangle.
         /// </summary>
         /// <returns>True if point is within rectangle</returns>

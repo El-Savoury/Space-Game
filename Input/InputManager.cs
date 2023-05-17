@@ -17,7 +17,7 @@
     }
 
     /// <summary>
-    /// Manages user inputs
+    /// Manages user inputs.
     /// </summary>
     static class InputManager
     {
@@ -34,7 +34,7 @@
         #region rInitialisation
 
         /// <summary>
-        /// Set default input bindings
+        /// Set default input bindings.
         /// </summary>
         public static void SetDefaultBindings()
         {
@@ -62,7 +62,7 @@
         #region rKeySense
 
         /// <summary>
-        /// Update input
+        /// Update input.
         /// </summary>
         /// <param name="gameTime">Frame time</param>
         public static void Update(GameTime gameTime)

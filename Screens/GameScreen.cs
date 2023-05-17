@@ -34,7 +34,7 @@
         public override void LoadContent()
         {
             mPlayer = new Player(new Vector2(0, 0));
-            mParticleSpawner = new ParticleSpawner();
+            mParticleSpawner = new ParticleSpawner(mPlayer);
 
             // Init camera to current viewport size and centre on player.
             mCamera = new Camera();
@@ -66,7 +66,7 @@
 
             mPlayer.Update(gameTime);
             mCamera.Update();
-            mParticleSpawner.Update(mPlayer.GetPosition());
+            mParticleSpawner.Update(gameTime, mPlayer.GetPosition());
         }
 
         #endregion rUpdate
@@ -93,10 +93,10 @@
                                    null, null, null, null,
                                    mCamera.mTranslationMatrix);
 
-            // Draw a background shape as reference point for movement
-            info.spriteBatch.Draw(Main.GetDummyTexture(),
-                                new Rectangle(0, 0, 400, 300),
-                                Color.DarkBlue);
+            //// Draw a background shape as reference point for movement
+            //info.spriteBatch.Draw(Main.GetDummyTexture(),
+            //                    new Rectangle(0, 0, 400, 300),
+            //                    Color.DarkBlue);
 
             mParticleSpawner.Draw(info);
             mPlayer.Draw(info);

@@ -8,8 +8,8 @@
         #region rConstants
 
         const float SPEED = 3.0f;
-        const int WIDTH = 16;
-        const int HEIGHT = 16;
+        const int WIDTH = 8;
+        const int HEIGHT = 8;
 
         #endregion rConstants
 
