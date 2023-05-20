@@ -9,7 +9,7 @@
 
         const int LOADED_GRID_SIZE = 3; // Grid width and height in chunks
         const int CHUNK_SIZE = 2000; // Chunk size in pixels
-        const int PARTICLES_PER_CHUNK = 100;
+        const int PARTICLES_PER_CHUNK = 500;
 
         #endregion rConstants
 
@@ -222,8 +222,15 @@
             {
                 Vector2 particlePos = new Vector2(mRand.Next(0, CHUNK_SIZE), mRand.Next(0, CHUNK_SIZE));
                 particlePos += chunkOrigin;
-                mParticles.Add(new GreyParticle(particlePos, mTarget));
-                mParticles.Add(new BlueParticle(particlePos));
+
+                if (particlePos.X % 2 == 0)
+                {
+                    mParticles.Add(new GreyParticle(particlePos, mTarget));
+                }
+                else
+                {
+                    mParticles.Add(new BlueParticle(particlePos));
+                }
             }
         }
 

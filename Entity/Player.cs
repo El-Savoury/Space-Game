@@ -37,6 +37,7 @@
         /// <param name="pos">Starting position</param>
         public Player(Vector2 pos) : base(pos)
         {
+            mMass = 10.0f;
         }
 
 

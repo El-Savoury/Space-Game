@@ -3,7 +3,7 @@
     /// <summary>
     /// A grey particle.
     /// </summary>
-    internal class GreyParticle : RepulseParticle
+    internal class GreyParticle : RepelParticle
     {
         /// <summary>
         /// Construct grey particle at position.

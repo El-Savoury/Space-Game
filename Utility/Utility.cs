@@ -6,9 +6,33 @@
     static class Utility
     {
         /// <summary>
-        /// Get distance between two points.
+        /// Calculate gravitational attraction force between entities. 
         /// </summary>
-        /// <returns>Float equalling distance between points</returns>
+        public static float CalculateGravity(Entity e1, Entity e2)
+        {
+            float distance = Utility.GetDistance(e1.GetPosition(), e2.GetPosition());
+            float g = 1f; // Universal gravitational constant.
+
+            // Attraction force is equal between both objects so only need to calculate this once.
+            float gravity = g * (e1.GetMass() * e2.GetMass()) / (distance * distance); 
+
+            return gravity;
+        }
+
+        /// <summary>
+        /// Gets the difference vector between two positions.
+        /// </summary>
+        /// <returns>Vector2 which is the difference vector between positions</returns>
+        public static Vector2 GetDifference(Vector2 v1, Vector2 v2)
+        {
+            return v1 - v2;
+        }
+
+
+        /// <summary>
+        /// Get distance between two postitons.
+        /// </summary>
+        /// <returns>Float equalling distance between positions</returns>
         public static float GetDistance(Vector2 a, Vector2 b)
         {
             float dx = a.X - b.X;

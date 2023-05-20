@@ -21,7 +21,6 @@
         protected Vector2 mVelocity;
         protected Color mColour;
 
-
         #endregion rMembers
 
 

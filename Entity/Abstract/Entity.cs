@@ -7,8 +7,9 @@
     {
         #region rMembers
 
-        protected Vector2 mPosition;
+        protected float mMass;
         protected Vector2 mCentreOfMass;
+        protected Vector2 mPosition;
         protected Texture2D mTexture;
         private bool mEnabled;
 
@@ -94,6 +95,14 @@
             return new Rect2f(mPosition, mPosition + new Vector2(mTexture.Width, mTexture.Height));
         }
 
+
+        /// <summary>
+        /// Get entitis mass value.
+        /// </summary>
+        public float GetMass()
+        {
+            return mMass;
+        }
 
         /// <summary>
         /// Get position of entity
