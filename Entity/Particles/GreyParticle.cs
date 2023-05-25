@@ -3,13 +3,13 @@
     /// <summary>
     /// A grey particle.
     /// </summary>
-    internal class GreyParticle : RepelParticle
+    internal class GreyParticle : Particle
     {
         /// <summary>
         /// Construct grey particle at position.
         /// </summary>
         /// <param name="pos">Starting position</param>
-        public GreyParticle(Vector2 pos, Entity target) : base(pos, target)
+        public GreyParticle(Vector2 pos, Entity target) : base(pos)
         {
             mColour = Color.Gray;
         }

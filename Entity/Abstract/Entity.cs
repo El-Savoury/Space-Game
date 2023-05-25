@@ -97,7 +97,7 @@
 
 
         /// <summary>
-        /// Get entitis mass value.
+        /// Get entities mass value.
         /// </summary>
         public float GetMass()
         {
@@ -107,7 +107,7 @@
         /// <summary>
         /// Get position of entity
         /// </summary>
-        public Vector2 GetPosition()
+        public Vector2 GetPos()
         {
             return mPosition;
         }

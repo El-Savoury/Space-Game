@@ -7,7 +7,7 @@
     {
         #region rConstants
 
-        const float SPEED = 3.0f;
+        const float SPEED = 1.0f;
         const int WIDTH = 8;
         const int HEIGHT = 8;
 
@@ -37,7 +37,7 @@
         /// <param name="pos">Starting position</param>
         public Player(Vector2 pos) : base(pos)
         {
-            mMass = 10.0f;
+            mMass = 5.0f;
         }
 
 
@@ -63,9 +63,11 @@
         /// Update player.
         /// </summary>
         /// <param name="gameTime">Frame time</param>
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, List<Particle> particles)
         {
             mPosition += CalcMovement();
+            Repel(particles);
+            Attract(particles);
         }
 
 
@@ -134,6 +136,41 @@
 
 
         #region mUtility
+
+        /// <summary>
+        /// Repel nearby particles.
+        /// </summary>
+        /// <param name="particles">Particle to repel</param>
+        public void Repel(List<Particle> particles)
+        {
+            foreach (Particle particle in particles)
+            {
+                if (Utility.GetDist(mPosition, particle.GetPos()) < 50 &&
+                    !InputManager.KeyHeld(Controls.Confirm))
+                {
+                    Vector2 force = Utility.CalcGravity(this, particle);
+                    particle.IncrementVelociy(-force);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Attract nearby particles.
+        /// </summary>
+        /// <param name="particles">Particle to repel</param>
+        public void Attract(List<Particle> particles)
+        {
+            foreach (Particle particle in particles)
+            {
+                if (Utility.GetDist(mPosition, particle.GetPos()) < 300 &&
+                    InputManager.KeyHeld(Controls.Confirm))
+                {
+                    Vector2 force = Utility.CalcGravity(this, particle);
+                    particle.IncrementVelociy(force);
+                }
+            }
+        }
 
         #endregion mUtility
 

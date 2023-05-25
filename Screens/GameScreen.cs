@@ -1,4 +1,6 @@
-﻿namespace Space_Game.Screens
+﻿using System.Collections.Generic;
+
+namespace Space_Game.Screens
 {
     /// <summary>
     /// Gameplay screen
@@ -9,6 +11,7 @@
 
         Player mPlayer;
         Camera mCamera;
+        List<Particle> mParticles;
         ParticleSpawner mParticleSpawner;
 
         #endregion rMembers
@@ -34,14 +37,15 @@
         public override void LoadContent()
         {
             mPlayer = new Player(new Vector2(0, 0));
-            mParticleSpawner = new ParticleSpawner(mPlayer);
+            mParticles = new List<Particle>();
+            mParticleSpawner = new ParticleSpawner(mParticles, mPlayer);
 
             // Init camera to current viewport size and centre on player.
             mCamera = new Camera();
             mCamera.mWidth = mGraphics.GraphicsDevice.Viewport.Height;
             mCamera.mHeight = mGraphics.GraphicsDevice.Viewport.Height;
             mCamera.TargetEntity(mPlayer);
-            mCamera.CentreOn(mPlayer.GetPosition());
+            mCamera.CentreOn(mPlayer.GetPos());
         }
 
         #endregion rInitialisation
@@ -59,14 +63,14 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            if (InputManager.KeyPressed(Controls.Confirm))
-            {
-                ScreenManager.ActivateScreen(ScreenType.Title);
-            }
+            //if (InputManager.KeyPressed(Controls.Confirm))
+            //{
+            //    ScreenManager.ActivateScreen(ScreenType.Title);
+            //}
 
-            mPlayer.Update(gameTime);
+            mPlayer.Update(gameTime, mParticles);
             mCamera.Update();
-            mParticleSpawner.Update(gameTime, mPlayer.GetPosition());
+            mParticleSpawner.Update(gameTime, mPlayer.GetPos());
         }
 
         #endregion rUpdate

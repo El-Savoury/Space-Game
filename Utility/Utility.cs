@@ -8,16 +8,21 @@
         /// <summary>
         /// Calculate gravitational attraction force between entities. 
         /// </summary>
-        public static float CalculateGravity(Entity e1, Entity e2)
+        /// <returns>Vector2 representing gravitational force</returns>
+        public static Vector2 CalcGravity(Entity e1, Entity e2)
         {
-            float distance = Utility.GetDistance(e1.GetPosition(), e2.GetPosition());
-            float g = 1f; // Universal gravitational constant.
+            Vector2 dif = GetDifference(e1.GetPos(), e2.GetPos());
+            float distSq = Math.Clamp(dif.LengthSquared(), 25, 255);
 
-            // Attraction force is equal between both objects so only need to calculate this once.
-            float gravity = g * (e1.GetMass() * e2.GetMass()) / (distance * distance); 
+            // Gravitational constant (force multiplier)
+            float g = 1.0f;
 
-            return gravity;
+            // Calulate attraction strength
+            float strength = g * (e1.GetMass() * e2.GetMass()) / distSq;
+
+            return Vector2.Normalize(dif) * strength;
         }
+
 
         /// <summary>
         /// Gets the difference vector between two positions.
@@ -33,7 +38,7 @@
         /// Get distance between two postitons.
         /// </summary>
         /// <returns>Float equalling distance between positions</returns>
-        public static float GetDistance(Vector2 a, Vector2 b)
+        public static float GetDist(Vector2 a, Vector2 b)
         {
             float dx = a.X - b.X;
             float dy = a.Y - b.Y;

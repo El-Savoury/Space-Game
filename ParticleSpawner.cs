@@ -9,7 +9,7 @@
 
         const int LOADED_GRID_SIZE = 3; // Grid width and height in chunks
         const int CHUNK_SIZE = 2000; // Chunk size in pixels
-        const int PARTICLES_PER_CHUNK = 500;
+        const int PARTICLES_PER_CHUNK = 700;
 
         #endregion rConstants
 
@@ -22,7 +22,7 @@
         Entity mTarget;
         Rectangle mLoadedChunks;
         Random mRand = new Random();
-        List<Particle> mParticles = new List<Particle>();
+        List<Particle> mParticles;
 
         #endregion rMembers
 
@@ -36,8 +36,9 @@
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ParticleSpawner(Entity target)
+        public ParticleSpawner(List<Particle> particles, Entity target)
         {
+            mParticles = particles;
             mTarget = target;
         }
 
@@ -67,7 +68,7 @@
 
             foreach (Particle particle in mParticles)
             {
-                particle.Update(gameTime);
+                particle.Update(gameTime, mParticles);
             }
         }
 
@@ -197,10 +198,10 @@
             {
                 if (mParticles[i] != null)
                 {
-                    if (mParticles[i].GetPosition().X >= chunk.X &&
-                        mParticles[i].GetPosition().X <= chunk.X + chunk.Width &&
-                        mParticles[i].GetPosition().Y >= chunk.Y &&
-                        mParticles[i].GetPosition().Y <= chunk.Y + chunk.Height)
+                    if (mParticles[i].GetPos().X >= chunk.X &&
+                        mParticles[i].GetPos().X <= chunk.X + chunk.Width &&
+                        mParticles[i].GetPos().Y >= chunk.Y &&
+                        mParticles[i].GetPos().Y <= chunk.Y + chunk.Height)
                     {
                         mParticles[i] = null;
                     }

@@ -128,7 +128,7 @@
         /// <param name="targetPos">Target position for camera to follow</param>
         private void FollowTarget()
         {
-            mPosition += (mTargetEntity.GetPosition() - mPosition) * FOLLOW_OFFSET;
+            mPosition += (mTargetEntity.GetPos() - mPosition) * FOLLOW_OFFSET;
         }
 
 
